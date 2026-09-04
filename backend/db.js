@@ -464,18 +464,136 @@ function loadDatabase() {
 // Initialize PostgreSQL if available
 async function initializeDatabase() {
   const pool = getPgPool();
-  if (!pool || pgInitialized) return;
+  if (!pool) {
+    console.log("⚠️ initializeDatabase: No PostgreSQL pool available.");
+    return;
+  }
+  if (pgInitialized) return;
 
   try {
+    console.log("🔄 Ensuring core PostgreSQL tables exist programmatically...");
+    
+    // Ensure essential tables are created directly
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS students (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(150) NOT NULL,
+          course VARCHAR(150) DEFAULT 'Bachelor of Medicine & Bachelor of Surgery (MBBS)',
+          batch VARCHAR(50) DEFAULT '2022-2027 (Clinical Phase)',
+          college VARCHAR(200) DEFAULT 'All India Institute of Medical Sciences (AIIMS)',
+          target_role VARCHAR(150) DEFAULT 'Junior Resident / Clinical Fellow',
+          career_readiness INT DEFAULT 88,
+          experience_score INT DEFAULT 74,
+          clinical_logbook_entries INT DEFAULT 42,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS mentors (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(150) NOT NULL,
+          role VARCHAR(150) NOT NULL,
+          company VARCHAR(150) NOT NULL,
+          specialization VARCHAR(150) DEFAULT 'Internal Medicine',
+          medical_council_reg VARCHAR(50),
+          experience_years INT DEFAULT 10,
+          availability BOOLEAN DEFAULT TRUE,
+          rating DECIMAL(2,1) DEFAULT 4.9,
+          sessions_completed INT DEFAULT 38
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS companies (
+          id SERIAL PRIMARY KEY,
+          company_name VARCHAR(150) NOT NULL,
+          industry VARCHAR(100) DEFAULT 'Multi-Specialty Tertiary Hospital',
+          org_type VARCHAR(100) DEFAULT 'Academic Medical Center',
+          accreditation VARCHAR(100) DEFAULT 'NABH / JCI Accredited',
+          location VARCHAR(150) DEFAULT 'New Delhi, India',
+          verified BOOLEAN DEFAULT TRUE,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY,
+          email VARCHAR(255) UNIQUE NOT NULL,
+          password_hash VARCHAR(255) NOT NULL,
+          name VARCHAR(255) NOT NULL,
+          role VARCHAR(50) NOT NULL,
+          student_id INTEGER,
+          mentor_id INTEGER,
+          company_id INTEGER,
+          is_verified BOOLEAN DEFAULT TRUE,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS jobs (
+          id SERIAL PRIMARY KEY,
+          company_id INT,
+          company VARCHAR(150) NOT NULL,
+          title VARCHAR(200) NOT NULL,
+          location VARCHAR(150) DEFAULT 'New Delhi, India',
+          type VARCHAR(50) DEFAULT 'Residency / Full-Time',
+          duration VARCHAR(50) DEFAULT '3 Years (MD/MS)',
+          stipend VARCHAR(100) DEFAULT '₹85,000 - ₹1,10,000/month',
+          openings INT DEFAULT 4,
+          required_skills TEXT[] DEFAULT '{}',
+          eligibility VARCHAR(200) DEFAULT 'MBBS with 1-Year Compulsory Rotatory Internship (CRMI)',
+          description TEXT,
+          deadline VARCHAR(50) DEFAULT '2026-10-31',
+          status VARCHAR(30) DEFAULT 'Active',
+          apps INT DEFAULT 0,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS gigs (
+          id SERIAL PRIMARY KEY,
+          company_id INT,
+          title VARCHAR(200) NOT NULL,
+          department VARCHAR(100) DEFAULT 'Emergency & Trauma',
+          description TEXT NOT NULL,
+          required_skill VARCHAR(120) NOT NULL,
+          duration_hours INT DEFAULT 40,
+          duration_weeks INT DEFAULT 4,
+          payment DECIMAL(10,2) DEFAULT 25000.00,
+          status VARCHAR(30) DEFAULT 'open',
+          slots_available INT DEFAULT 2,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    console.log("✅ Core PostgreSQL tables verified/created successfully.");
+
+    // Also try running full schema.sql if available
     const schemaPath = path.join(__dirname, "schema.sql");
     if (fs.existsSync(schemaPath)) {
       const sql = fs.readFileSync(schemaPath, "utf8");
-      await pool.query(sql);
-      pgInitialized = true;
-      console.log("✅ PostgreSQL schema & seed data verified/initialized successfully.");
+      const statements = sql
+        .split(";")
+        .map(s => s.trim())
+        .filter(s => s.length > 0 && !s.startsWith("--"));
+
+      for (const statement of statements) {
+        try {
+          await pool.query(statement);
+        } catch (stmtErr) {
+          // Ignore duplicate key or relation already exists errors
+        }
+      }
+      console.log("✅ Full schema.sql seed execution completed.");
     }
+
+    pgInitialized = true;
   } catch (err) {
-    console.error("⚠️ PostgreSQL schema initialization notice:", err.message);
+    console.error("❌ PostgreSQL schema initialization error:", err.message, err.stack);
   }
 }
 
@@ -1007,28 +1125,6 @@ async function getJobs() {
   const pool = getPgPool();
   if (pool) {
     try {
-      // Ensure jobs table exists if not already created
-      await pool.query(`
-        CREATE TABLE IF NOT EXISTS jobs (
-          id SERIAL PRIMARY KEY,
-          company_id INT DEFAULT 1,
-          company VARCHAR(150) NOT NULL,
-          title VARCHAR(200) NOT NULL,
-          location VARCHAR(150) DEFAULT 'Remote',
-          type VARCHAR(50) DEFAULT 'Full-Time',
-          duration VARCHAR(50) DEFAULT 'Full-Time',
-          stipend VARCHAR(100) DEFAULT 'Competitive',
-          openings INT DEFAULT 1,
-          required_skills TEXT[] DEFAULT '{}',
-          eligibility VARCHAR(200),
-          description TEXT,
-          deadline VARCHAR(50),
-          status VARCHAR(30) DEFAULT 'Active',
-          apps INT DEFAULT 0,
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
-
       const res = await pool.query("SELECT * FROM jobs ORDER BY id DESC");
       if (res.rows && res.rows.length > 0) {
         return res.rows.map(j => {
@@ -1113,28 +1209,6 @@ async function createJob(payload) {
 
   if (pool) {
     try {
-      // Auto-ensure table exists
-      await pool.query(`
-        CREATE TABLE IF NOT EXISTS jobs (
-          id SERIAL PRIMARY KEY,
-          company_id INT DEFAULT 1,
-          company VARCHAR(150) NOT NULL,
-          title VARCHAR(200) NOT NULL,
-          location VARCHAR(150) DEFAULT 'Remote',
-          type VARCHAR(50) DEFAULT 'Full-Time',
-          duration VARCHAR(50) DEFAULT 'Full-Time',
-          stipend VARCHAR(100) DEFAULT 'Competitive',
-          openings INT DEFAULT 1,
-          required_skills TEXT[] DEFAULT '{}',
-          eligibility VARCHAR(200),
-          description TEXT,
-          deadline VARCHAR(50),
-          status VARCHAR(30) DEFAULT 'Active',
-          apps INT DEFAULT 0,
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
-
       const res = await pool.query(
         `INSERT INTO jobs (company_id, company, title, location, type, duration, stipend, openings, required_skills, eligibility, description, deadline, status, apps)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 0)

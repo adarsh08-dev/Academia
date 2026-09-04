@@ -385,7 +385,6 @@ export const App: React.FC = () => {
           unreadCount={unreadCount}
           onOpenNotifications={() => setIsNotificationsOpen(true)}
           onOpenTrust={() => setActiveTab('trust')}
-          onOpenProfile={() => setIsProfileOpen(true)}
           onOpenAuth={() => {
             setAuthInitialMode('register');
             setAuthInitialRole(currentRole);

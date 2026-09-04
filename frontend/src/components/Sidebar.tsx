@@ -144,15 +144,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
 
         {/* Connected Accounts */}
-        <div className="px-2.5 pb-4">
+        {!collapsed && (
+          <div className="px-2.5 pb-4">
           <ConnectedAccounts collapsed={collapsed} role={currentRole} />
-        </div>
-
+        </div>)}
+        
         {/* Navigation Menus */}
         <div className={`flex-1 overflow-y-auto ${collapsed ? 'px-1.5' : 'px-2.5'} py-2 space-y-4 sidebar-scrollbar`}>
           {/* STUDENT PORTAL MENU */}
           {currentRole === 'student' && (
             <>
+  
+
               {/* Category 1: Clinical Readiness & Progression */}
               <div>
                 {!collapsed && (

@@ -12,7 +12,7 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, s
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex justify-start bg-black/60 backdrop-blur-sm">
       <div className="w-full max-w-md bg-[#0B1026] border-l border-slate-800 p-6 overflow-y-auto">
         <div className="flex items-center justify-between pb-4 border-b border-slate-800">
           <h2 className="text-lg font-bold text-slate-100">Professional Medical Profile</h2>
