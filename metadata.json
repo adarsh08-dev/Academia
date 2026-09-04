@@ -1,6 +1,6 @@
 {
-  "name": "Ladder",
-  "description": "Academia-Industry Portal connecting students with industry mentors, blockchain-verified skill passports, vetted micro-internships, and placement opportunities.",
+  "name": "LADDER",
+  "description": "LADDER — Medical Education, Career, Research & Healthcare Industry Collaboration Platform connecting medical & healthcare students, faculty, mentors, and healthcare organizations.",
   "requestFramePermissions": [
     "geolocation"
   ],
