@@ -475,11 +475,11 @@ export interface CustomPortfolioData {
 
 export function getCustomPortfolioData(): CustomPortfolioData {
   return getFromStorage<CustomPortfolioData>(STORAGE_KEYS.CUSTOM_PORTFOLIO, {
-    name: 'Dr. Adarsh Pratap Singh',
-    role: 'Junior Resident / Clinical Fellow',
+    name: localStorage.getItem('userName') || '',
+    role: localStorage.getItem('userCourse') || '',
     headline: 'Clinical Intern & Medical Researcher specializing in Emergency Medicine, Critical Care, and Evidence-Based Protocols.',
     bio: 'Dedicated medical learner and clinical intern with demonstrated competencies in emergency resuscitation (ACLS/BLS), clinical pharmacology, diagnostic reasoning, and multicenter ICMR clinical research. Cryptographically verified clinical logbooks and ranked in top percentile for clinical readiness.',
-    email: 'adarsh@aiims.edu',
+    email: localStorage.getItem('userEmail') || '',
     phone: '+91 98765 43210',
     location: 'New Delhi, India',
     githubUrl: 'https://github.com/adarshpratap-med',

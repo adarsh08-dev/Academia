@@ -48,8 +48,8 @@ export const SkillTwinAndQuests: React.FC = () => {
   const [skillBadges, setSkillBadges] = useState<MedicalSkillBadge[]>(DEFAULT_MEDICAL_SKILL_BADGES);
 
   const [user, setUser] = useState<UserProfile>({
-    name: 'Dr. Adarsh Pratap Singh',
-    batch: 'MBBS / Clinical Learner (Batch 2022-2027)',
+    name: localStorage.getItem('userName') || '',
+    batch: localStorage.getItem('userCourse') + ' - ' + localStorage.getItem('userYear'),
     email: 'adarsh@aiims.edu'
   });
 
@@ -176,12 +176,12 @@ export const SkillTwinAndQuests: React.FC = () => {
     }
 
     if (!foundName) {
-      foundName = 'Dr. Adarsh Pratap Singh';
+      foundName = localStorage.getItem('userName') || '';
     }
 
     setUser({
       name: foundName,
-      batch: foundBatch || 'MBBS / Clinical Learner (Batch 2022-2027)',
+      batch: foundBatch || localStorage.getItem('userCourse') + ' - ' + localStorage.getItem('userYear'),
       email: foundEmail || 'adarsh@aiims.edu'
     });
   }, []);

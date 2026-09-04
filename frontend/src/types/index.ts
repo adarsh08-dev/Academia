@@ -35,6 +35,7 @@ export interface StudentProfile {
   year?: string;
   rollNo?: string;
   email?: string;
+  company?: string;
   targetRole: string;
   careerReadiness: number;
   experienceScore: number;

@@ -59,15 +59,16 @@ export interface UserProfileData {
 
 export const getStoredUserProfile = (): UserProfileData => {
   let p: any = {
-    name: 'Dr. Adarsh Pratap Singh',
-    rollNo: 'MED-2022-AIIMS-084',
-    email: 'adarsh.singh@aiims.edu',
-    department: 'Internal Medicine & Clinical Research',
-    college: 'All India Institute of Medical Sciences (AIIMS), New Delhi',
-    year: 'Final Year MBBS / Clinical Intern',
-    role: 'student',
-    type: 'Medical Scholar & Clinical Intern',
-    location: 'New Delhi, India'
+    name: localStorage.getItem('userName') || '',
+    rollNo: localStorage.getItem('userRollNo') || '',
+    email: localStorage.getItem('userEmail') || '',
+    department: localStorage.getItem('userCourse') || '',
+    college: localStorage.getItem('userCollege') || '',
+    year: localStorage.getItem('userYear') || '',
+    company: localStorage.getItem('userCompany') || '',
+    role: localStorage.getItem('role') || 'student',
+    type: '',
+    location: ''
   };
 
   try {
@@ -248,7 +249,8 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
         college: editCollege,
         rollNo: editRollNo,
         email: editEmail,
-        batch: editYear
+        batch: editYear,
+        company: editCompany
       });
     }
 
@@ -273,7 +275,7 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
   const isStudent = !isHOD && !isMentor;
 
   const getSubtitle = () => {
-    if (isHOD) return `HOD - ${p.department || p.dept || 'CSIT'}`;
+    if (isHOD) return `HOD - ${p.department || p.dept || 'Department'}`;
     if (isMentor) return `Mentor - ${p.company || 'Enterprise Partner'}`;
     return `${p.department || 'Computer Science & IT'} · Full Stack Software Engineer`;
   };
@@ -363,7 +365,7 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
               {/* Name & Subtitle */}
               <div>
                 <h3 className="text-lg font-bold text-white">
-                  {p.name || 'Adarsh Pratap Singh'}
+                  {p.name}
                 </h3>
                 <p className="text-xs text-[#A78BFA] font-medium mt-0.5">
                   {getSubtitle()}

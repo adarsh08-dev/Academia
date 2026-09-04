@@ -1,3 +1,4 @@
+import { SimulatedLearningModules } from "../components/SimulatedLearningModules";
 import React, { useState, useEffect } from 'react';
 import { 
   Compass, 
@@ -23,7 +24,8 @@ import {
   CheckCircle,
   FileCheck2,
   BarChart3,
-  Bot
+  Bot,
+  Stethoscope
 } from 'lucide-react';
 import { StudentProfile, Mentor, Gig, PassportRecord, JobOpportunity } from '../types';
 import { SkillTwinAndQuests } from '../components/SkillTwinAndQuests';
@@ -96,13 +98,23 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
 
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-              Welcome back, {student?.name?.split(' ')[0] || 'Dr. Adarsh'}
+              Welcome back, {student?.name?.split(' ')[0] || ''}
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-2 leading-relaxed">
               Targeting <strong className="text-white">{student?.targetRole || 'Junior Resident / Clinical Fellow'}</strong> at leading academic medical centers and healthcare institutions. Your verified clinical competencies are on track for top-percentile residency matching.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 mt-5">
+              <button
+                id="hero-medical-pathways-btn"
+                onClick={() => onNavigate('medical-pathways')}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#7C5CFC] hover:opacity-95 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-blue-500/25 transition-all cursor-pointer"
+              >
+                <Stethoscope className="w-3.5 h-3.5 text-cyan-300" />
+                <span>Medical Career Pathways</span>
+                <span className="text-[9px] bg-white/20 px-1 py-0.5 rounded font-bold">New</span>
+              </button>
+
               <button
                 onClick={() => onNavigate('career-ladder')}
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#10B981] to-[#06B6D4] hover:opacity-95 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
@@ -162,6 +174,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
       </div>
 
       <SkillTwinAndQuests />
+      <SimulatedLearningModules />
 
       {/* 2. SKILL READINESS OVERVIEW & SKILL GAP SUMMARY (GRID) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

@@ -93,7 +93,7 @@ export const ResumePortfolioView: React.FC<ResumePortfolioViewProps> = ({
     window.print();
   };
 
-  const displayName = customData.name || student?.name || 'Dr. Adarsh Pratap Singh';
+  const displayName = customData.name || student?.name ;
   const displayRole = customData.role || student?.targetRole || 'Junior Resident / Clinical Fellow';
   const displayCollege = customData.college || student?.college || 'All India Institute of Medical Sciences (AIIMS), New Delhi';
   const displayDegree = customData.degree || student?.course || 'MBBS (2022-2027 Clinical Intern)';

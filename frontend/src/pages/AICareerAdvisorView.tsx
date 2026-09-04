@@ -44,7 +44,7 @@ export const AICareerAdvisorView: React.FC<AICareerAdvisorViewProps> = ({
     {
       id: 'm1',
       sender: 'ai',
-      text: `Hello ${student?.name || 'Dr. Adarsh'}! I am your AI Clinical Career Advisor. Based on your verified Clinical Skill Twin (Anatomy & Physiology Lv. 3, Pharmacology Lv. 2, Clinical Diagnosis Lv. 4), you are currently at 88% Clinical Readiness for Junior Resident and Clinical Fellowship matching. How can I assist your clinical training and research roadmap today?`,
+      text: `Hello ${student?.name }! I am your AI Clinical Career Advisor. Based on your verified Clinical Skill Twin (Anatomy & Physiology Lv. 3, Pharmacology Lv. 2, Clinical Diagnosis Lv. 4), you are currently at 88% Clinical Readiness for Junior Resident and Clinical Fellowship matching. How can I assist your clinical training and research roadmap today?`,
       timestamp: 'Just now',
       suggestedAction: {
         label: 'View Skill Gap Summary',

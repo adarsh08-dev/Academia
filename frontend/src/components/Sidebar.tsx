@@ -25,7 +25,8 @@ import {
   Menu,
   Lock,
   Calendar,
-  TrendingUp
+  TrendingUp,
+  Stethoscope
 } from 'lucide-react';
 import { UserRole, StudentProfile } from '../types';
 import { Logo } from './Logo';
@@ -173,6 +174,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   >
                     <Compass className="w-4 h-4 text-[#8B5CF6] shrink-0" />
                     {!collapsed && <span className="truncate">Clinical Overview</span>}
+                  </button>
+
+                  <button
+                    id="nav-medical-pathways"
+                    onClick={() => handleTabClick('medical-pathways')}
+                    title="Medical Career Pathways"
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
+                      activeTab === 'medical-pathways'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <Stethoscope className="w-4 h-4 text-blue-400 shrink-0" />
+                    {!collapsed && (
+                      <div className="flex items-center justify-between w-full min-w-0">
+                        <span className="truncate">Medical Pathways</span>
+                        <span className="text-[9px] bg-blue-500/20 text-blue-300 font-bold px-1.5 py-0.5 rounded shrink-0">
+                          New
+                        </span>
+                      </div>
+                    )}
                   </button>
 
                   <button
@@ -710,13 +732,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   ) : (
                     <div className="w-9 h-9 rounded-lg bg-[#7C5CFC]/20 border border-[#7C5CFC]/30 flex items-center justify-center font-bold text-[#A78BFA] text-xs shadow">
                       {getInitials(
-                        currentRole === 'hod'
-                          ? 'Dr. Arvind Sharma'
-                          : currentRole === 'mentor'
-                          ? 'Amit Verma'
-                          : currentRole === 'company'
-                          ? (localStorage.getItem('userName') || 'Corporate Recruiter')
-                          : student?.name || localStorage.getItem('userName') || 'Adarsh Pratap'
+                        student?.name || localStorage.getItem('userName') || 'User'
                       )}
                     </div>
                   )}
@@ -724,22 +740,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-white truncate group-hover:text-[#C4B5FD] transition-colors">
-                    {currentRole === 'hod'
-                      ? 'Dr. Arvind Sharma'
-                      : currentRole === 'mentor'
-                      ? 'Amit Verma'
-                      : currentRole === 'company'
-                      ? (localStorage.getItem('userName') || 'Corporate Recruiter')
-                      : student?.name || localStorage.getItem('userName') || 'Adarsh Pratap'}
+                    {student?.name || localStorage.getItem('userName') || 'User'}
                   </p>
                   <p className="text-[10px] text-white/30 truncate font-sans">
                     {currentRole === 'hod'
-                      ? 'HOD • Dept of CSIT'
+                      ? `HOD • ${student?.course || localStorage.getItem('userCourse') || 'Department'}`
                       : currentRole === 'mentor'
-                      ? 'TCS Senior Architect'
+                      ? `${student?.company || localStorage.getItem('userCompany') || 'Mentor'} ${student?.course || localStorage.getItem('userCourse') || ''}`
                       : currentRole === 'company'
-                      ? 'Talent Acquisition Partner'
-                      : student?.batch ? `CSIT - Batch ${student.batch}` : 'CSIT - Batch 2025-29'}
+                      ? (student?.company || localStorage.getItem('userCompany') || 'Talent Acquisition Partner')
+                      : (student?.course || localStorage.getItem('userCourse')) && (student?.batch || localStorage.getItem('userYear')) 
+                        ? `${student?.course || localStorage.getItem('userCourse')} • ${student?.batch || localStorage.getItem('userYear')}` 
+                        : (student?.course || localStorage.getItem('userCourse') || student?.batch || localStorage.getItem('userYear') || 'Profile information unavailable')}
                   </p>
                 </div>
               </div>
@@ -776,13 +788,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 title="View Profile"
               >
                 {getInitials(
-                  currentRole === 'hod'
-                    ? 'Dr. Arvind'
-                    : currentRole === 'mentor'
-                    ? 'Amit'
-                    : currentRole === 'company' || currentRole === 'recruiter'
-                    ? (localStorage.getItem('userName') || 'Recruiter')
-                    : student?.name || localStorage.getItem('userName') || 'Adarsh'
+                  student?.name || localStorage.getItem('userName') || 'User'
                 )}
               </button>
               {onToggleCollapse && (

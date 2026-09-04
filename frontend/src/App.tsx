@@ -28,6 +28,7 @@ import { MentorCapsulesView } from './pages/MentorCapsulesView';
 import { ExperiencePassportView } from './pages/ExperiencePassportView';
 import { TrustVerificationView } from './pages/TrustVerificationView';
 import { AIHelpdeskView } from './pages/AIHelpdeskView';
+import { MedicalCareerPathwaysView } from './pages/MedicalCareerPathwaysView';
 import { FacultyDashboard } from './pages/FacultyDashboard';
 import { MentorDashboard } from './pages/MentorDashboard';
 import { RecruiterDashboard } from './pages/recruiter/RecruiterDashboard';
@@ -72,33 +73,28 @@ export const App: React.FC = () => {
     const p = getStoredUserProfile();
     return {
       id: 1,
-      name: p.name || 'Dr. Adarsh Pratap Singh',
-      course: p.department || 'Internal Medicine & Clinical Research',
-      batch: p.year || 'Final Year MBBS / Clinical Intern',
-      college: p.college || 'All India Institute of Medical Sciences (AIIMS), New Delhi',
-      rollNo: p.rollNo || 'MED-2022-AIIMS-084',
-      email: p.email || 'adarsh.singh@aiims.edu',
-      targetRole: 'Clinical Research Fellow & Internal Medicine Resident',
-      careerReadiness: 84,
-      experienceScore: 78,
-      dnaScores: {
-        algorithmicThinking: 86, // Clinical Reasoning
-        systemDesign: 82, // Healthcare Systems & Quality
-        codeQuality: 88, // Protocol & Documentation Rigor
-        communication: 90, // Doctor-Patient Communication
-        problemSolving: 92, // Diagnostic Problem Solving
-        adaptability: 85  // High-Acuity Rotational Agility
+      name: p.name || localStorage.getItem('userName') || '',
+      course: p.department || p.course || localStorage.getItem('userCourse') || '',
+      batch: p.year || p.batch || localStorage.getItem('userYear') || '',
+      college: p.college || localStorage.getItem('userCollege') || '',
+      rollNo: p.rollNo || localStorage.getItem('userRollNo') || '',
+      email: p.email || localStorage.getItem('userEmail') || '',
+      targetRole: p.targetRole || '',
+      careerReadiness: p.careerReadiness || 0,
+      experienceScore: p.experienceScore || 0,
+      dnaScores: p.dnaScores || {
+        algorithmicThinking: 0,
+        systemDesign: 0,
+        codeQuality: 0,
+        communication: 0,
+        problemSolving: 0,
+        adaptability: 0
       },
-      timeMachinePredictions: {
-        currentQuarter: 'Q3 2026',
-        targetDate: 'July 2027',
-        expectedPlacementPackage: '₹14.0 – ₹22.0 LPA (Clinical Fellowship)',
-        milestones: [
-          { month: 'Sep 2026', target: 'Complete ICH-GCP E6(R2) Clinical Investigator Defense', completed: true },
-          { month: 'Nov 2026', target: 'Attend 4 Mentor Capsules with Senior Hospital Consultants', completed: true },
-          { month: 'Jan 2027', target: 'Publish Heart Failure Cohort Registry Interim Report', completed: false },
-          { month: 'Apr 2027', target: 'Finalize National Residency Match & Fellowship Portfolio', completed: false }
-        ]
+      timeMachinePredictions: p.timeMachinePredictions || {
+        currentQuarter: '',
+        targetDate: '',
+        expectedPlacementPackage: '',
+        milestones: []
       }
     };
   });
@@ -320,17 +316,16 @@ export const App: React.FC = () => {
     localStorage.setItem('role', payload.role);
     localStorage.setItem('userRole', payload.role === 'mentor' ? 'Mentor' : payload.role === 'hod' ? 'HOD' : payload.role === 'company' ? 'company' : 'student');
 
-    if (payload.role === 'student') {
-      setStudent(prev => ({
-        ...prev,
-        name: payload.name,
-        course: payload.department || prev.course,
-        college: payload.college?.name || prev.college,
-        batch: payload.batch || prev.batch,
-        rollNo: payload.rollNo || prev.rollNo,
-        email: payload.email || prev.email
-      }));
-    }
+    setStudent(prev => ({
+      ...prev,
+      name: payload.name,
+      course: payload.department || prev.course,
+      college: payload.college?.name || prev.college,
+      batch: payload.batch || prev.batch,
+      rollNo: payload.rollNo || prev.rollNo,
+      email: payload.email || prev.email,
+      company: payload.company || prev.company,
+    }));
 
     // Launch Ladder AI Logo Opening Animation Splash
     setSplashData({
@@ -467,6 +462,10 @@ export const App: React.FC = () => {
                     onBookMentor={(m) => setBookingMentor(m)}
                     onApplyGig={(g) => setApplyingGig(g)}
                   />
+                )}
+
+                {activeTab === 'medical-pathways' && (
+                  <MedicalCareerPathwaysView />
                 )}
 
                 {activeTab === 'career-ladder' && (

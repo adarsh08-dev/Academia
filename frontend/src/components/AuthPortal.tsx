@@ -77,18 +77,18 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   const [detectedLocation, setDetectedLocation] = useState<string>('Lucknow, Uttar Pradesh, India');
 
   // --- Student Fields ---
-  const [studentName, setStudentName] = useState('Dr. Adarsh Pratap Singh');
-  const [studentRollNo, setStudentRollNo] = useState('MED-2022-AIIMS-084');
-  const [academicYear, setAcademicYear] = useState('Final Year MBBS / Clinical Intern');
+  const [studentName, setStudentName] = useState('');
+  const [studentRollNo, setStudentRollNo] = useState('');
+  const [academicYear, setAcademicYear] = useState('');
   const [studentDept, setStudentDept] = useState(DEPARTMENTS[0]);
   const [studentCollege, setStudentCollege] = useState<CollegeItem>(UNIS[0]);
-  const [studentEmail, setStudentEmail] = useState('adarsh.singh@aiims.edu');
-  const [studentPassword, setStudentPassword] = useState('password123');
+  const [studentEmail, setStudentEmail] = useState('');
+  const [studentPassword, setStudentPassword] = useState('');
 
   // --- Mentor Fields ---
-  const [mentorName, setMentorName] = useState('Dr. Vikramaditya Roy');
-  const [mentorEmail, setMentorEmail] = useState('vikram.roy@apollohospitals.com');
-  const [mentorPassword, setMentorPassword] = useState('password123');
+  const [mentorName, setMentorName] = useState('');
+  const [mentorEmail, setMentorEmail] = useState('');
+  const [mentorPassword, setMentorPassword] = useState('');
   const [mentorCompanyPreset, setMentorCompanyPreset] = useState(MENTOR_COMPANIES_DATA[0]);
   const [customCompany, setCustomCompany] = useState('');
   const [selectedExpertise, setSelectedExpertise] = useState<string[]>([
@@ -99,17 +99,17 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
   const [newTagInput, setNewTagInput] = useState('');
 
   // --- HOD Fields ---
-  const [hodName, setHodName] = useState('Prof. (Dr.) Arvind K. Sharma');
-  const [hodEmail, setHodEmail] = useState('dean.clinical@aiims.edu');
-  const [hodPassword, setHodPassword] = useState('password123');
+  const [hodName, setHodName] = useState('');
+  const [hodEmail, setHodEmail] = useState('');
+  const [hodPassword, setHodPassword] = useState('');
   const [hodCollege, setHodCollege] = useState<CollegeItem>(UNIS[0]);
   const [hodDept, setHodDept] = useState(DEPARTMENTS[0]);
 
   // --- Recruiter Fields ---
-  const [recruiterName, setRecruiterName] = useState('Dr. Priya Sharma');
-  const [recruiterCompany, setRecruiterCompany] = useState('Apollo Hospitals Enterprise');
-  const [recruiterEmail, setRecruiterEmail] = useState('talent.acquisition@apollohospitals.com');
-  const [recruiterPassword, setRecruiterPassword] = useState('password123');
+  const [recruiterName, setRecruiterName] = useState('');
+  const [recruiterCompany, setRecruiterCompany] = useState('');
+  const [recruiterEmail, setRecruiterEmail] = useState('');
+  const [recruiterPassword, setRecruiterPassword] = useState('');
 
   useEffect(() => {
     if (isOpen) {
@@ -188,7 +188,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
 
       if (roleTab === 'Student') {
         form = {
-          name: studentName.trim() || 'Dr. Adarsh Pratap Singh',
+          name: studentName.trim() ,
           email: studentEmail.trim() || 'adarsh.singh@aiims.edu',
           uni: studentCollege.name,
           dept: studentDept,
