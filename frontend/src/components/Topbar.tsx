@@ -2,8 +2,6 @@ import React from 'react';
 import { Bell, Search, User, Moon, Sun, Shield, HelpCircle } from 'lucide-react';
 
 interface TopbarProps {
-  onToggleProfile?: () => void;
-  onOpenProfile?: () => void;
   onToggleNotifications?: () => void;
   onOpenNotifications?: () => void;
   onToggleTheme: () => void;
@@ -18,8 +16,6 @@ interface TopbarProps {
 }
 
 export const Topbar: React.FC<TopbarProps> = ({
-  onToggleProfile,
-  onOpenProfile,
   onToggleNotifications,
   onOpenNotifications,
   onToggleTheme,
@@ -33,7 +29,6 @@ export const Topbar: React.FC<TopbarProps> = ({
 }) => {
   const handleRoleChangeVal = onChangeRole || onRoleChange || (() => {});
   const roleVal = activeRole || currentRole || 'student';
-  const toggleProfileVal = onToggleProfile || onOpenProfile || (() => {});
   const toggleNotifVal = onToggleNotifications || onOpenNotifications || (() => {});
   return (
     <header className="h-16 border-b border-slate-800 bg-[#0B1026]/90 backdrop-blur px-6 flex items-center justify-between sticky top-0 z-30">
@@ -77,15 +72,6 @@ export const Topbar: React.FC<TopbarProps> = ({
         >
           <Bell className="w-5 h-5" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full"></span>
-        </button>
-
-        <button
-          onClick={toggleProfileVal}
-          className="flex items-center gap-2 pl-2 border-l border-slate-800 hover:opacity-80 transition"
-        >
-          <div className="w-9 h-9 rounded-full bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-300 font-bold text-sm">
-            AS
-          </div>
         </button>
       </div>
     </header>
